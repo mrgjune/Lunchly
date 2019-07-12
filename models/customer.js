@@ -53,6 +53,12 @@ class Customer {
     return new Customer(customer);
   }
 
+  /** returns the customers fullName */
+  get fullName() {
+    return this.firstName + " " + this.lastName;
+  }
+  
+
   /** get all reservations for this customer. */
 
   async getReservations() {
@@ -77,6 +83,42 @@ class Customer {
         [this.firstName, this.lastName, this.phone, this.notes, this.id]
       );
     }
+  }
+
+  static async findCustomer(fullName) {
+
+    //check if fullname matches first and last in db
+    const name = `%${fullName}%`;
+    const result = await db.query(
+      `SELECT first_name, last_name, id 
+        FROM customers 
+        WHERE first_name || ' ' ||  last_name LIKE $1 `,
+        [name]
+    )
+    if (!result){
+      throw err;
+    } else {
+      return result.rows[0].id;
+    }
+  }
+
+
+  static async topCustomers() {
+    const results = await db.query(
+      `SELECT c.first_name, c.last_name, 
+        COUNT(r.customer_id), c.id 
+        FROM reservations AS r 
+        LEFT JOIN customers AS c 
+        ON r.customer_id = c.id 
+        GROUP BY c.first_name, c.last_name, c.id
+        ORDER BY COUNT(r.customer_id) DESC
+        LIMIT 10;`
+    );
+
+    const topCustomers = results.rows;
+    console.log(results.rows)
+
+    return topCustomers;
   }
 }
 

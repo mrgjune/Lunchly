@@ -46,19 +46,7 @@ router.post("/add/", async function(req, res, next) {
   }
 });
 
-/** Show a customer, given their ID. */
 
-router.get("/:id/", async function(req, res, next) {
-  try {
-    const customer = await Customer.get(req.params.id);
-
-    const reservations = await customer.getReservations();
-
-    return res.render("customer_detail.html", { customer, reservations });
-  } catch (err) {
-    return next(err);
-  }
-});
 
 /** Show form to edit a customer. */
 
@@ -111,5 +99,58 @@ router.post("/:id/add-reservation/", async function(req, res, next) {
     return next(err);
   }
 });
+
+
+
+router.get("/search/", async function(req, res, next) {
+  try {
+    return res.render("search.html");
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.post("/search/", async function(req, res, next) {
+  try {
+    
+    //const customer = await Customer.get(req.params.id);
+    const fullName = req.body.fullName;
+
+    let customerId = await Customer.findCustomer(fullName)
+  
+      return res.redirect(`/${customerId}/`);
+
+
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.get("/best-customers/", async function(req, res, next){
+  try {
+    const topCustomers = await Customer.topCustomers();
+    return res.render("top_customers.html", { topCustomers })
+
+  } catch (err) {
+    return next(err);
+  }  
+})
+
+/** Show a customer, given their ID. */
+
+router.get("/:id/", async function(req, res, next) {
+  try {
+    const customer = await Customer.get(req.params.id);
+
+    const reservations = await customer.getReservations();
+
+
+
+    return res.render("customer_detail.html", { customer, reservations });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 
 module.exports = router;

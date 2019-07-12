@@ -5,12 +5,13 @@
 <a class="btn btn-primary" style="float: right" href="/add/">Add a Customer</a></p>
 
 
-<h1>Customers</h1>
+<h1>Top 10 Best Customers</h1>
 
-<ul style="column-count: 4">
-  {% for customer in customers %}
-  <li><a href="/{{ customer.id }}/">{{ customer.firstName }} {{ customer.lastName }}</a></li>
+<ol>
+  {% for customer in topCustomers %}
+  <li><a href="/{{ customer.id }}/">{{ customer.first_name }} {{ customer.last_name }}</a></li>
   {% endfor %}
-</ul>
+
+</ol>
 
 {% endblock %}

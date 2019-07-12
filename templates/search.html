@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %} search {% endblock %}
+
+{% block content %}
+
+<form action="/search/" method="POST">
+  <div class="form-group">
+    <label for="full-name"> Enter Name: </label>
+    <input id="full-name" class="form-control" name="fullName">
+  </div>
+ 
+  <button class="btn btn-primary">Search</button>
+  <a href="/" class="btn btn-danger">Cancel</a>
+</form>
+
+{% endblock %}
